@@ -156,8 +156,8 @@
 	const generateRandomNumber = async ()=>{
 		return new Promise(resolve => {
 			let count = 0;
-			// const randomNumber = Math.floor(Math.random() * 1000);
-			const randomNumber = parseInt(prompt("number"));
+			const randomNumber = Math.floor(Math.random() * 1000);
+			// const randomNumber = parseInt(prompt("number"));
 			
 			tileElem.classList.add("disabled");
 			cellsElem.forEach(cellElem => {
