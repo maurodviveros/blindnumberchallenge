@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width">
+		<meta name="generator" content="Astro v2.4.1">
+		<title>Blind Number Challenge</title>
+		
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="/_astro/index.b8007fb8.css" /></head>
+	<body>
+	<h1 class="astro-J7PV25F6">Blind Number Challenge</h1>
+	<main class="astro-J7PV25F6">
+		<section class="astro-2LZ3BGDM">
+    <article class="game-board astro-2LZ3BGDM">
+        <div id="0" class="cell astro-J2NIFSYD">
+	1
+</div><div id="1" class="cell astro-J2NIFSYD">
+	2
+</div><div id="2" class="cell astro-J2NIFSYD">
+	3
+</div><div id="3" class="cell astro-J2NIFSYD">
+	4
+</div><div id="4" class="cell astro-J2NIFSYD">
+	5
+</div><div id="5" class="cell astro-J2NIFSYD">
+	6
+</div><div id="6" class="cell astro-J2NIFSYD">
+	7
+</div><div id="7" class="cell astro-J2NIFSYD">
+	8
+</div><div id="8" class="cell astro-J2NIFSYD">
+	9
+</div><div id="9" class="cell astro-J2NIFSYD">
+	10
+</div>
+    </article>
+    <h2 class="astro-2LZ3BGDM">123</h2>
+    <div id="tile" class="cell astro-J2NIFSYD" draggable="true">
+	999
+</div>
+</section>
+		<nav class="astro-PYSXVD3C">
+    <button id="level-2" class="level very-easy astro-PYSXVD3C astro-2VEOV33H">
+    2
+</button><button id="level-5" class="level easy astro-PYSXVD3C astro-2VEOV33H">
+    5
+</button><button id="level-10" class="level normal astro-PYSXVD3C astro-2VEOV33H">
+    10
+</button>
+    <button id="level-reload" class="reload astro-PYSXVD3C astro-2VEOV33H">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30">
+    <path d="M 15 3 C 12.031398 3 9.3028202 4.0834384 7.2070312 5.875 A 1.0001 1.0001 0 1 0 8.5058594 7.3945312 C 10.25407 5.9000929 12.516602 5 15 5 C 20.19656 5 24.450989 8.9379267 24.951172 14 L 22 14 L 26 20 L 30 14 L 26.949219 14 C 26.437925 7.8516588 21.277839 3 15 3 z M 4 10 L 0 16 L 3.0507812 16 C 3.562075 22.148341 8.7221607 27 15 27 C 17.968602 27 20.69718 25.916562 22.792969 24.125 A 1.0001 1.0001 0 1 0 21.494141 22.605469 C 19.74593 24.099907 17.483398 25 15 25 C 9.80344 25 5.5490109 21.062074 5.0488281 16 L 8 16 L 4 10 z"></path>
+</svg>
+</button>
+</nav>
+	</main>
+
+	<footer class="astro-J7PV25F6">
+		<p class="astro-J7PV25F6">COPYRIGHT &copy; 2023 &mdash; <a href="https://github.com/maurodviveros" target="_blank" class="astro-J7PV25F6">MAURO D. VIVEROS</a></p>
+	</footer>
+</body></html>
+
+
+
+<script>(function(){const defaultLevel = 5;
+
+	const levelsBtnRef = document.querySelectorAll("button.level");
+	const reloadBtnRef = document.querySelector("button#level-reload");
+	const gameBoardElem = document.querySelector(".game-board");
+	const messageElem = document.querySelector("section h2");
+	const draggableElem = document.querySelector(".cell[draggable]");
+	const cellsElem = document.querySelectorAll(".game-board .cell");
+	const tileElem  = document.querySelector(".cell#tile");
+
+	let hasClickDraggable = false;
+
+	
+
+	cellsElem.forEach(cellElem => {
+		cellElem.addEventListener("dragover", e => {
+			if(cellElem.classList.contains("objetive")) return e.preventDefault();
+			else if(cellElem.classList.contains("enable")) cellElem.classList.add("objetive");
+		});
+		cellElem.addEventListener("dragleave", e => {
+			if(cellElem.classList.contains("objetive")) cellElem.classList.remove("objetive");
+			else return e.preventDefault();
+		});
+	});
+
+	draggableElem.addEventListener("dragend", () => {
+		cellsElem.forEach(cellElem => {
+			if(!cellElem.classList.contains("objetive")) return;
+
+			const randomNumber = parseInt(tileElem.innerHTML);
+			cellElem.classList.remove("enable");
+			cellElem.classList.remove("objetive");
+			cellElem.classList.add("busy");
+			cellElem.innerHTML = randomNumber;
+
+			generateRandomNumber();
+			nextStage();
+		});
+	});
+	
+	draggableElem.addEventListener("click", () => {
+		draggableElem.classList.add("pulse", "objetive");
+		hasClickDraggable = true;
+	});
+
+	cellsElem.forEach(cellElem => {
+		cellElem.addEventListener("click", e => {
+			if(hasClickDraggable){
+				if(!cellElem.classList.contains("enable")) return;
+
+				const randomNumber = parseInt(tileElem.innerHTML);
+				cellElem.classList.remove("enable");
+				cellElem.classList.add("busy");
+				cellElem.innerHTML = randomNumber;
+
+				generateRandomNumber();
+				nextStage();
+				
+				draggableElem.classList.remove("pulse", "objetive");
+				hasClickDraggable = false;
+			}
+		})
+	})
+
+	reloadBtnRef.addEventListener("click", () => { reload(); });
+	levelsBtnRef.forEach(levelBtnRef => {
+		levelBtnRef.addEventListener("click", () => { updateLevel(levelBtnRef.id); });
+	});
+
+	const storageLevel = (level)=>{
+		window.localStorage.setItem("level", level.toString());
+		return level.toString();
+	}
+
+	const generateRandomNumber = ()=>{
+		tileElem.innerHTML = Math.floor(Math.random() * 1000);
+		// tileElem.innerHTML = parseInt(prompt("number"));
+	}
+
+	const _getLevel = ()=>{
+		let level = window.localStorage.getItem("level");
+		if(!level) level = storageLevel(defaultLevel);
+
+		if(level <= 5){
+			gameBoardElem.style.setProperty("--rows", level);
+			gameBoardElem.style.setProperty("--columns", 1);
+		}
+		else{
+			gameBoardElem.style.setProperty("--rows", 5);
+			gameBoardElem.style.setProperty("--columns", level / 5);
+		}
+
+		const levelsRef = document.querySelectorAll(".level");
+		let activeLevelRef = document.querySelector(`.level#level-${level}`);
+		if(!activeLevelRef){
+			level = storageLevel(defaultLevel);
+			activeLevelRef = document.querySelector(`.level#level-${level}`);
+		}
+
+		levelsRef.forEach(level => level.classList.remove("active"));
+		activeLevelRef.classList.add("active");
+
+		return parseInt(level);
+	}
+
+	const winGAME = ()=>{
+		gameBoardElem.classList.add("win");
+		messageElem.innerHTML = "You Win!";
+		draggableElem.removeAttribute("draggable");
+		reloadBtnRef.classList.add("pulse");
+	}
+
+	const loseGAME = ()=>{
+		gameBoardElem.classList.add("lose");
+		messageElem.innerHTML = "Lose! Try again";
+		draggableElem.removeAttribute("draggable");
+		reloadBtnRef.classList.add("pulse");
+	}
+
+	const reloadCells = ()=>{
+		const level = _getLevel();
+
+		const tileNumber = parseInt(tileElem.innerHTML);
+		const cellsBusy = [];
+		const cells = [];
+		cellsElem.forEach((cellElem, i) => {
+			cellElem.classList.remove("enable");
+			if(i >= level) return cellElem.classList.add("hidden");
+			if(cellElem.classList.contains("busy")) cellsBusy.push({ id: parseInt(cellElem.id), value: parseInt(cellElem.innerHTML), elem: cellElem });
+			else cells.push({ id: parseInt(cellElem.id), value: undefined, elem: cellElem });
+		});
+
+		const _getNearbyCellsBusy = () => {
+			let min, max;
+			for(const cellBusy of cellsBusy){
+				if(cellBusy.value > tileNumber && (!max || cellBusy.value < max.value)) max = cellBusy;
+				if(cellBusy.value < tileNumber && (!min || cellBusy.value > min.value)) min = cellBusy;
+			}
+			return [min, max];
+		}
+
+		const _canEnable = (cell) => {
+			const [ firstBusyCell, lastBusyCell ] = _getNearbyCellsBusy();
+			if(!cellsBusy.length) return true;
+			if(!!firstBusyCell && !lastBusyCell) return cell.id > firstBusyCell.id;
+			if(!!lastBusyCell && !firstBusyCell) return cell.id < lastBusyCell.id;
+			if(!!firstBusyCell && !!lastBusyCell) return firstBusyCell.id < cell.id && cell.id < lastBusyCell.id;
+		}
+
+		cells.forEach(cell => {
+			if(_canEnable(cell)) cell.elem.classList.add("enable");
+		});
+
+		if(!cells.length) return winGAME();
+		if(cells.length && !document.querySelectorAll(".cell.enable").length) return loseGAME();
+	};
+
+	const nextStage = ()=>{
+		reloadCells();
+	}
+
+	const updateLevel = (levelID)=>{
+		const levelNum = parseInt(levelID.split("-")[1]);
+		storageLevel(levelNum);
+		reload();
+	};
+
+	const reload = ()=>{
+		gameBoardElem.classList.remove("lose", "win");
+		reloadBtnRef.classList.remove("pulse");
+		messageElem.innerHTML = "";
+		draggableElem.setAttribute("draggable", true);
+		cellsElem.forEach((cellElem, i) => {
+			cellElem.classList.remove("hidden", "busy", "enable");
+			cellElem.innerHTML = i + 1;
+		});
+		start();
+	}
+
+	const start = ()=>{
+		generateRandomNumber();
+		reloadCells();
+	};
+
+	start();
+})();</script>
