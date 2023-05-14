@@ -10,7 +10,7 @@
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="/blindnumberchallenge/_astro/index.b8007fb8.css" /></head>
+	<link rel="stylesheet" href="/blindnumberchallenge/_astro/index.99850481.css" /></head>
 	<body>
 	<h1 class="astro-J7PV25F6">Blind Number Challenge</h1>
 	<main class="astro-J7PV25F6">
@@ -77,6 +77,7 @@
 	const tileElem  = document.querySelector(".cell#tile");
 
 	let hasClickDraggable = false;
+	let isMobile = false;
 
 	
 
@@ -107,6 +108,8 @@
 	});
 	
 	draggableElem.addEventListener("click", () => {
+		const _cellEnable = document.querySelectorAll(".cell.enable");
+		if(!_cellEnable.length) return;
 		draggableElem.classList.add("pulse", "objetive");
 		hasClickDraggable = true;
 	});
@@ -124,8 +127,10 @@
 				generateRandomNumber();
 				nextStage();
 				
-				draggableElem.classList.remove("pulse", "objetive");
-				hasClickDraggable = false;
+				if(!isMobile){
+					draggableElem.classList.remove("pulse", "objetive");
+					hasClickDraggable = false;
+				}
 			}
 		})
 	})
@@ -176,6 +181,7 @@
 		messageElem.innerHTML = "You Win!";
 		draggableElem.removeAttribute("draggable");
 		reloadBtnRef.classList.add("pulse");
+		draggableElem.classList.remove("pulse", "objetive");
 	}
 
 	const loseGAME = ()=>{
@@ -183,6 +189,7 @@
 		messageElem.innerHTML = "Lose! Try again";
 		draggableElem.removeAttribute("draggable");
 		reloadBtnRef.classList.add("pulse");
+		draggableElem.classList.remove("pulse", "objetive");
 	}
 
 	const reloadCells = ()=>{
@@ -249,6 +256,19 @@
 		generateRandomNumber();
 		reloadCells();
 	};
+
+	if (navigator.userAgent.match(/Android/i)
+	 || navigator.userAgent.match(/webOS/i)
+	 || navigator.userAgent.match(/iPhone/i)
+	 || navigator.userAgent.match(/iPad/i)
+	 || navigator.userAgent.match(/iPod/i)
+	 || navigator.userAgent.match(/BlackBerry/i)
+	 || navigator.userAgent.match(/Windows Phone/i)){
+		isMobile = true;
+		draggableElem.classList.add("pulse", "objetive");
+		hasClickDraggable = true;
+
+	}
 
 	start();
 })();</script>
